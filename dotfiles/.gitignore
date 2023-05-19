@@ -1,0 +1,14 @@
+/*
+/.**
+!/.gitignore
+
+# shell
+!/.bash_profile
+!/.bash_aliases
+!/.inputrc
+
+# vim editor settings
+!/.vimrc
+
+# husky
+!/.huskyrc
