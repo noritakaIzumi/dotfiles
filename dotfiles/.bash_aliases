@@ -2,9 +2,12 @@
 alias jq='jq -C'
 
 # register SSH config aliases
-for name in `cat ~/.ssh/config | grep ^Host | cut -d ' ' -f2`; do
-    alias ssh--${name}="ssh ${name}"
-done
+if [[ -f $HOME/.ssh/config ]]; then
+  grep ^Host "$HOME"/.ssh/config | cut -d ' ' -f2 | while IFS= read -r name; do
+    # shellcheck disable=SC2139
+    alias ssh--"${name}"="ssh ${name}"
+  done
+fi
 
 # AWS CDK
 alias cdk="npx aws-cdk"
