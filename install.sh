@@ -9,6 +9,9 @@ find . -mindepth 1 -maxdepth 1 -print0 | while IFS= read -r -d '' file; do
   if [[ $file = ".gitignore" ]]; then
     continue
   fi
+  if [[ -L $HOME/$file ]]; then
+    unlink "$HOME"/"$file"
+  fi
   if [[ -f $HOME/$file || -d $HOME/$file ]]; then
     mv -v "$HOME"/"$file"{,.bk}
   fi
