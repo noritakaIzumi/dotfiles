@@ -14,19 +14,19 @@ EOF
 
 # VSCode remote development
 function coderemote() {
-  SSH_CONFIG_NAME=$1
-  REMOTE_PATH=$2
-  code --remote ssh-remote+${SSH_CONFIG_NAME} ${REMOTE_PATH}
+  local SSH_CONFIG_NAME=$1
+  local REMOTE_PATH=$2
+  code --remote ssh-remote+"${SSH_CONFIG_NAME}" "${REMOTE_PATH}"
 }
 
 # WSL development
 function codewslubuntu() {
-  REMOTE_PATH=$1
-  code --remote wsl+Ubuntu ${REMOTE_PATH}
+  local REMOTE_PATH=$1
+  code --remote wsl+Ubuntu "${REMOTE_PATH}"
 }
 
 # ruby environment
-export PATH="~/.rbenv/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init - bash)"
 
 # Node.js version control
@@ -47,11 +47,12 @@ eval "$(pyenv init -)"
 export GOPATH=/mnt/c/Users/nizum/go/bin
 
 # enable passphrase prompt for gpg
-export GPG_TTY=$(tty)
+TTY=$(tty)
+export GPG_TTY=$TTY
 
 # Random password
 # https://serverfault.com/questions/283294/how-to-read-in-n-random-characters-from-dev-urandom
 randpw() {
-  COUNT=$1
-  head -c 1000 /dev/urandom | tr -dc '[\x00-\x7F]' | fold -w ${COUNT} | head -n 1
+  local COUNT=$1
+  head -c 1000 /dev/urandom | tr -dc '\x00-\x7F' | fold -w "${COUNT}" | head -n 1
 }
