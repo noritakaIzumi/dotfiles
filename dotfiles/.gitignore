@@ -12,3 +12,6 @@
 
 # husky
 !/.huskyrc
+
+# default git conifg
+!/.config/git/ignore
