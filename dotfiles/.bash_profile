@@ -73,5 +73,5 @@ export GPG_TTY=$TTY
 # https://serverfault.com/questions/283294/how-to-read-in-n-random-characters-from-dev-urandom
 randpw() {
   local COUNT=$1
-  head -c 1000 /dev/urandom | tr -dc '\x00-\x7F' | fold -w "${COUNT}" | head -n 1
+  head -c 1000 /dev/urandom | tr -dc '!-~' | fold -w "${COUNT}" | head -n 1
 }
