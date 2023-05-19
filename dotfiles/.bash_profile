@@ -25,6 +25,10 @@ function codewslubuntu() {
   code --remote wsl+Ubuntu ${REMOTE_PATH}
 }
 
+# ruby environment
+export PATH="~/.rbenv/bin:$PATH"
+eval "$(rbenv init - bash)"
+
 # Node.js version control
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
