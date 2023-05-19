@@ -1,4 +1,5 @@
 if [ -f ~/.bashrc ]; then
+  # shellcheck disable=SC1090
   . ~/.bashrc
 fi
 
@@ -26,22 +27,40 @@ function codewslubuntu() {
 }
 
 # ruby environment
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init - bash)"
+if [[ -d $HOME/.rbenv ]]; then
+  export PATH="$HOME/.rbenv/bin:$PATH"
+  eval "$(rbenv init - bash)"
+else
+  echo 'rbenv is not installed'
+fi
 
 # Node.js version control
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+if [[ -d $HOME/.nvm ]]; then
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+else
+  echo 'nvm is not installed'
+fi
 
 # Python version control
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+if [[ -d $HOME/.pyenv ]]; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
+else
+  echo 'pyenv is not installed'
+fi
 
 # asdf
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
+if [[ -d $HOME/.asdf ]]; then
+  # shellcheck disable=SC1090
+  . "$HOME"/.asdf/asdf.sh
+  # shellcheck disable=SC1090
+  . "$HOME"/.asdf/completions/asdf.bash
+else
+  echo 'asdf is not installed'
+fi
 
 # GOPATH in windows
 export GOPATH=/mnt/c/Users/nizum/go/bin
