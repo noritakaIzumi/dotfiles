@@ -44,3 +44,10 @@ export GOPATH=/mnt/c/Users/nizum/go/bin
 
 # enable passphrase prompt for gpg
 export GPG_TTY=$(tty)
+
+# Random password
+# https://serverfault.com/questions/283294/how-to-read-in-n-random-characters-from-dev-urandom
+randpw() {
+  COUNT=$1
+  head -c 1000 /dev/urandom | tr -dc '[\x00-\x7F]' | fold -w ${COUNT} | head -n 1
+}
