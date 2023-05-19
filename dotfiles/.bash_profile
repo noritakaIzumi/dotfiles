@@ -16,13 +16,13 @@ EOF
 function coderemote() {
   SSH_CONFIG_NAME=$1
   REMOTE_PATH=$2
-  MSYS_NO_PATHCONV=1 code --remote ssh-remote+${SSH_CONFIG_NAME} ${REMOTE_PATH}
+  code --remote ssh-remote+${SSH_CONFIG_NAME} ${REMOTE_PATH}
 }
 
 # WSL development
 function codewslubuntu() {
   REMOTE_PATH=$1
-  MSYS_NO_PATHCONV=1 code --remote wsl+Ubuntu ${REMOTE_PATH}
+  code --remote wsl+Ubuntu ${REMOTE_PATH}
 }
 
 # Node.js version control
