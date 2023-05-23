@@ -26,32 +26,6 @@ function codewslubuntu() {
   code --remote wsl+Ubuntu "${REMOTE_PATH}"
 }
 
-# ruby environment
-if [[ -d $HOME/.rbenv ]]; then
-  export PATH="$HOME/.rbenv/bin:$PATH"
-  eval "$(rbenv init - bash)"
-else
-  echo 'rbenv is not installed'
-fi
-
-# Node.js version control
-if [[ -d $HOME/.nvm ]]; then
-  export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
-else
-  echo 'nvm is not installed'
-fi
-
-# Python version control
-if [[ -d $HOME/.pyenv ]]; then
-  export PYENV_ROOT="$HOME/.pyenv"
-  command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init -)"
-else
-  echo 'pyenv is not installed'
-fi
-
 # asdf
 if [[ -d $HOME/.asdf ]]; then
   # shellcheck disable=SC1090
