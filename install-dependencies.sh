@@ -35,3 +35,7 @@ if ! command -v gitkraken; then
   exit 1
 fi
 rm -v ./gitkraken-amd64.deb
+
+# clean
+sudo apt autoremove -y
+sudo apt clean -y
