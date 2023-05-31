@@ -20,3 +20,18 @@ find . -mindepth 1 -maxdepth 1 -print0 | while IFS= read -r -d '' file; do
   fi
   ln -vnfs "$PWD"/"$file" "$HOME"
 done
+
+# Configure git
+git config --global core.autocrlf input
+git config --global core.editor vim
+git config --global commit.gpgsign true
+git config --global init.defaultbranch main
+git config --global tag.forcesignannotated true
+echo 'your global git config:'
+cat "$HOME"/.gitconfig
+GIT_CONFIG_REQUIRED="user.email user.name user.signingkey"
+echo "$GIT_CONFIG_REQUIRED" | tr ' ' "\n" | while read -r config; do
+  if [[ -z "$(git config --global "$config")" ]]; then
+    echo "please set $config"
+  fi
+done
