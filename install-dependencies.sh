@@ -2,10 +2,21 @@
 
 set -e
 
-REQUISITES="curl git"
+REQUISITES="curl"
 echo "$REQUISITES" | tr ' ' "\n" | while read -r command; do
   if ! command -v "$command" >/dev/null; then
     echo 'curl is not installed'
+    exit 1
+  fi
+done
+
+# Install apt dependencies
+DEPENDENCIES="git vim"
+# shellcheck disable=SC2086
+sudo apt install -y $DEPENDENCIES
+echo "$DEPENDENCIES" | tr ' ' "\n" | while read -r command; do
+  if ! command -v "$command" >/dev/null; then
+    echo "failed to install $command"
     exit 1
   fi
 done
