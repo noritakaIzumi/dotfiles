@@ -5,7 +5,7 @@ set -e
 REQUISITES="curl"
 echo "$REQUISITES" | tr ' ' "\n" | while read -r command; do
   if ! command -v "$command" >/dev/null; then
-    echo 'curl is not installed'
+    echo "$command is not installed"
     exit 1
   fi
 done
