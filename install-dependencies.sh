@@ -50,3 +50,6 @@ rm -v ./gitkraken-amd64.deb
 # clean
 sudo apt autoremove -y
 sudo apt clean -y
+
+# END
+echo 'install dependencies finished'
