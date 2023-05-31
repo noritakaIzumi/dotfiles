@@ -6,6 +6,7 @@ fi
 export HISTCONTROL=ignoreboth:erasedups
 
 # SSH into windows machine
+# please add: "Include ~/.ssh/config-windows"
 cat >~/.ssh/config-windows <<EOF
 Host windows
     Hostname $(ip route | grep 'default via' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
