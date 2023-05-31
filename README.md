@@ -2,7 +2,9 @@
 
 My dotfiles
 
-## asdf プラグインについて
+## Get started
+
+### asdf プラグインの追加
 
 `dotfiles/.config/asdf/plugins` に追加したいプラグインを記述してください。
 
@@ -13,3 +15,10 @@ ruby
 python
 nodejs
 ```
+
+### 各種コマンド実行
+
+以下の順に実行してください。
+
+- `./install-dependencies.sh`
+- `./install.sh`
