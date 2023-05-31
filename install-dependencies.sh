@@ -39,8 +39,10 @@ while read -r plugin; do
 done <./dotfiles/.config/asdf/plugins
 
 # Install git client (GitKraken)
-wget https://release.gitkraken.com/linux/gitkraken-amd64.deb
-sudo apt install -y ./gitkraken-amd64.deb
+if ! command -v gitkraken; then
+  wget https://release.gitkraken.com/linux/gitkraken-amd64.deb
+  sudo apt install -y ./gitkraken-amd64.deb
+fi
 if ! command -v gitkraken; then
   echo 'failed to install GitKraken'
   exit 1
