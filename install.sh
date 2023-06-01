@@ -35,3 +35,14 @@ echo "$GIT_CONFIG_REQUIRED" | tr ' ' "\n" | while read -r config; do
     echo "please set $config"
   fi
 done
+
+# Configure gpg pinentry program
+if [[ -f '/mnt/c/Program Files (x86)/GnuPG/bin/pinentry-basic.exe' ]]; then
+  cat >>~/.gnupg/gpg-agent.conf <<EOF
+pinentry-program /mnt/c/Program Files (x86)/GnuPG/bin/pinentry-basic.exe
+EOF
+  gpgconf --kill gpg-agent
+  echo 'configured gpg pinentry program'
+else
+  echo 'GnuPG is not installed on Windows'
+fi
