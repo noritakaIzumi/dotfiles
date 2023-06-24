@@ -51,12 +51,10 @@ randpw() {
   head -c 1000 /dev/random | tr -dc '!-~' | fold -w "${COUNT}" | head -n 1
 }
 
-function cd() {
-  builtin cd "$@"
-
+__after_cd() {
   # https://stackoverflow.com/questions/45216663/how-to-automatically-activate-virtualenvs-when-cding-into-a-directory
   if [[ -z "$VIRTUAL_ENV" ]] ; then
-    ## If env folder is found then activate the vitualenv
+    ## If env folder is found then activate the virtualenv
     if [[ -d ./.venv ]] ; then
       source ./.venv/bin/activate
     fi
@@ -70,3 +68,10 @@ function cd() {
     fi
   fi
 }
+
+cd() {
+  builtin cd "$@"
+  __after_cd
+}
+
+__after_cd
