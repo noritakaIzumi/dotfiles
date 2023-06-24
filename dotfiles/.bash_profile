@@ -50,3 +50,23 @@ randpw() {
   local COUNT=$1
   head -c 1000 /dev/random | tr -dc '!-~' | fold -w "${COUNT}" | head -n 1
 }
+
+function cd() {
+  builtin cd "$@"
+
+  # https://stackoverflow.com/questions/45216663/how-to-automatically-activate-virtualenvs-when-cding-into-a-directory
+  if [[ -z "$VIRTUAL_ENV" ]] ; then
+    ## If env folder is found then activate the vitualenv
+    if [[ -d ./.venv ]] ; then
+      source ./.venv/bin/activate
+    fi
+  else
+    ## check the current folder belong to earlier VIRTUAL_ENV folder
+    # if yes then do nothing
+    # else deactivate
+    parentdir="$(dirname "$VIRTUAL_ENV")"
+    if [[ "$PWD"/ != "$parentdir"/* ]] ; then
+      deactivate
+    fi
+  fi
+}
