@@ -41,7 +41,7 @@ if ! command -v gitkraken; then
   echo 'failed to install GitKraken'
   exit 1
 fi
-rm -v ./gitkraken-amd64.deb
+test -f ./gitkraken-amd64.deb && rm -v ./gitkraken-amd64.deb
 
 # clean
 sudo apt autoremove -y
