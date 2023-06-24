@@ -11,15 +11,9 @@ echo "$REQUISITES" | tr ' ' "\n" | while read -r command; do
 done
 
 # Install apt dependencies
-DEPENDENCIES="git vim"
+DEPENDENCIES=$(tr '\n' ' ' < dotfiles/.config/dependencies | sed -e 's/ $//g')
 # shellcheck disable=SC2086
 sudo apt install -y $DEPENDENCIES
-echo "$DEPENDENCIES" | tr ' ' "\n" | while read -r command; do
-  if ! command -v "$command" >/dev/null; then
-    echo "failed to install $command"
-    exit 1
-  fi
-done
 
 # Install asdf
 ASDF_VERSION=v0.11.3
