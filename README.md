@@ -13,7 +13,6 @@ example
 ```text
 ruby
 python
-nodejs
 ```
 
 ### 各種コマンド実行
