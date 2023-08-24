@@ -15,5 +15,7 @@
 
 # default git config
 !/.config/
+!/.config/asdf/
+!/.config/asdf/plugins
 !/.config/git/
 !/.config/git/ignore
