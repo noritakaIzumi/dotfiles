@@ -13,7 +13,7 @@
 # husky
 !/.huskyrc
 
-# default git config
+# add files (whitelist)
 !/.config/
 !/.config/asdf/
 !/.config/asdf/plugins
@@ -21,3 +21,4 @@
 !/.config/git/ignore
 !/.config/dependencies
 !/.config/dependencies/dependencies.txt
+!/.config/dependencies/*.sh
