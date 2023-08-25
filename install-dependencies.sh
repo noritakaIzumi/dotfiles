@@ -6,6 +6,8 @@ REPO_ROOT=$(cd "$(dirname "$0")" && pwd)
 
 pushd "$REPO_ROOT" || exit 1
 
+sudo apt update
+
 REQUISITES="curl git"
 echo "$REQUISITES" | tr ' ' "\n" | while read -r command; do
   if ! command -v "$command" >/dev/null; then
