@@ -4,3 +4,4 @@ libncurses-dev
 libreadline-dev
 tk-dev
 liblzma-dev
+gh
