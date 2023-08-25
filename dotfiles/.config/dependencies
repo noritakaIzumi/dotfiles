@@ -1,0 +1,6 @@
+vim
+libbz2-dev
+libncurses-dev
+libreadline-dev
+tk-dev
+liblzma-dev
