@@ -21,7 +21,7 @@ function coderemote() {
   code --remote ssh-remote+"${SSH_CONFIG_NAME}" "${REMOTE_PATH}"
 }
 
-# WSL development
+# VSCode WSL development
 function codewslubuntu() {
   local REMOTE_PATH=$1
   code --remote wsl+Ubuntu "${REMOTE_PATH}"
@@ -51,6 +51,7 @@ randpw() {
   head -c 1000 /dev/random | tr -dc '!-~' | fold -w "${COUNT}" | head -n 1
 }
 
+# overload builtin "cd"
 __after_cd() {
   # https://stackoverflow.com/questions/45216663/how-to-automatically-activate-virtualenvs-when-cding-into-a-directory
   if [[ -z "$VIRTUAL_ENV" ]] ; then
