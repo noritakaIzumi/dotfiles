@@ -20,3 +20,4 @@
 !/.config/git/
 !/.config/git/ignore
 !/.config/dependencies
+!/.config/dependencies/dependencies.txt

@@ -11,7 +11,7 @@ echo "$REQUISITES" | tr ' ' "\n" | while read -r command; do
 done
 
 # Install apt dependencies
-DEPENDENCIES=$(tr '\n' ' ' < dotfiles/.config/dependencies | sed -e 's/ $//g')
+DEPENDENCIES=$(tr '\n' ' ' < dotfiles/.config/dependencies/dependencies.txt | sed -e 's/ $//g')
 # shellcheck disable=SC2086
 sudo apt install -y $DEPENDENCIES
 
