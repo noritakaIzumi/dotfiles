@@ -4,6 +4,8 @@ set -e
 
 REPO_ROOT=$(cd "$(dirname "$0")" && pwd)
 
+pushd "$REPO_ROOT" || exit 1
+
 REQUISITES="curl git"
 echo "$REQUISITES" | tr ' ' "\n" | while read -r command; do
   if ! command -v "$command" >/dev/null; then
@@ -29,6 +31,8 @@ done <<< "$(find ./dotfiles/.config/dependencies -mindepth 1 -type f -name '*.sh
 # clean
 sudo apt autoremove -y
 sudo apt clean -y
+
+popd || exit 1
 
 # END
 echo 'install dependencies finished'

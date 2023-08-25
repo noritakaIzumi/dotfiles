@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
+set -e
+
 REPO_ROOT=$1
 if [ -z "$REPO_ROOT" ]; then
   echo 'REPO_ROOT is not set'
   exit 1
 fi
+
+pushd "$REPO_ROOT" > /dev/null || exit 1
 
 # Install asdf
 ASDF_VERSION=v0.11.3
@@ -29,4 +33,6 @@ while read -r row; do
     echo "Uninstall plugin: $plugin"
     asdf plugin remove "$plugin"
   fi
-done <<< "$(diff -U 100 <(asdf plugin list | sort -u) <(< $REPO_ROOT/dotfiles/.config/asdf/plugins sort -u) | sed -n '4,$p')"
+done <<< "$(diff -U 100 <(asdf plugin list | sort -u) <(< ./dotfiles/.config/asdf/plugins sort -u) | sed -n '4,$p')"
+
+popd > /dev/null || exit 1
