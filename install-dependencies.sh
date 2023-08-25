@@ -2,7 +2,7 @@
 
 set -e
 
-REQUISITES="curl"
+REQUISITES="curl git"
 echo "$REQUISITES" | tr ' ' "\n" | while read -r command; do
   if ! command -v "$command" >/dev/null; then
     echo "$command is not installed"
