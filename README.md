@@ -15,9 +15,10 @@ ruby
 python
 ```
 
-### 各種コマンド実行
+### インストール
 
-以下の順に実行してください。
+インストールは以下のコマンドで完了します。
 
-- `./install-dependencies.sh`
-- `./install.sh`
+```shell
+./install.sh
+```

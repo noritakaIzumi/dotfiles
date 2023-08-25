@@ -4,8 +4,13 @@ set -e
 
 REPO_ROOT=$(cd "$(dirname "$0")" && pwd)
 
+pushd "$REPO_ROOT" > /dev/null || exit 1
+
+# Install dependencies
+. ./install-dependencies.sh
+
 # Create symlinks of config files
-cd "${REPO_ROOT}"/dotfiles || exit
+pushd ./dotfiles > /dev/null || exit
 find . -mindepth 1 -maxdepth 1 -print0 | while IFS= read -r -d '' file; do
   file=$(echo "$file" | sed 's/^.\///')
   if [[ $file = ".gitignore" ]]; then
@@ -45,3 +50,5 @@ EOF
 else
   echo 'GnuPG is not installed on Windows'
 fi
+
+popd > /dev/null || exit
