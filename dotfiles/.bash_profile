@@ -80,3 +80,9 @@ __after_cd
 # Volta
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
+
+# open link in default Windows browser
+# https://superuser.com/questions/1262977/open-browser-in-host-system-from-windows-subsystem-for-linux
+# https://help.ubuntu.com/community/EnvironmentVariables#Preferred_application_variables
+# https://wslutiliti.es/wslu/
+export BROWSER=wslview
