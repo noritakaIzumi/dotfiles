@@ -57,7 +57,15 @@ __after_cd() {
   if [[ -z "$VIRTUAL_ENV" ]] ; then
     ## If env folder is found then activate the virtualenv
     if [[ -d ./.venv ]] ; then
+      # shellcheck disable=SC1091
       source ./.venv/bin/activate
+    elif [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]]; then
+      local git_repo_root
+      git_repo_root="$(git rev-parse --show-toplevel)"
+      if [[ -d "$git_repo_root"/.venv ]]; then
+        # shellcheck disable=SC1090
+        source "$git_repo_root"/.venv/bin/activate
+      fi
     fi
   else
     ## check the current folder belong to earlier VIRTUAL_ENV folder
