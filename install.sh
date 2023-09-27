@@ -31,6 +31,7 @@ git config --global core.editor vim
 git config --global commit.gpgsign true
 git config --global init.defaultbranch main
 git config --global tag.forcesignannotated true
+git config --global alias.root 'rev-parse --show-toplevel'
 echo 'your global git config:'
 cat "$HOME"/.gitconfig
 GIT_CONFIG_REQUIRED="user.email user.name user.signingkey"

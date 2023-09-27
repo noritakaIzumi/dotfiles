@@ -61,7 +61,7 @@ __after_cd() {
       source ./.venv/bin/activate
     elif [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]]; then
       local git_repo_root
-      git_repo_root="$(git rev-parse --show-toplevel)"
+      git_repo_root="$(git root)"
       if [[ -d "$git_repo_root"/.venv ]]; then
         # shellcheck disable=SC1090
         source "$git_repo_root"/.venv/bin/activate
