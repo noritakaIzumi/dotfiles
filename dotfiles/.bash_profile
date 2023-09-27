@@ -51,6 +51,17 @@ randpw() {
   head -c 1000 /dev/random | tr -dc '!-~' | fold -w "${COUNT}" | head -n 1
 }
 
+# check if terminal is MinGW
+__is_mingw() {
+  local kernel_name
+  kernel_name="$(uname -s)"
+  if [[ "${kernel_name^^}" =~ "MINGW" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 # overload builtin "cd"
 __after_cd() {
   # https://stackoverflow.com/questions/45216663/how-to-automatically-activate-virtualenvs-when-cding-into-a-directory
@@ -66,10 +77,25 @@ __after_cd() {
         venv_contained_dir="$git_repo_root"
       fi
     fi
-    if [[ -n "$venv_contained_dir" ]]; then
-      # shellcheck disable=SC1090
-      source "$venv_contained_dir"/.venv/bin/activate
+
+    if [[ -z "$venv_contained_dir" ]]; then
+      return 0
     fi
+
+    local activate_bin_path
+    if __is_mingw; then
+      activate_bin_path=".venv/Scripts/activate"
+    else
+      activate_bin_path=".venv/bin/activate"
+    fi
+
+    if [[ ! -f "$venv_contained_dir"/"$activate_bin_path" ]]; then
+      echo 'venv dir exists but activate command does not exist'
+      return 0
+    fi
+
+    # shellcheck disable=SC1090
+    source "$venv_contained_dir"/"$activate_bin_path"
   else
     ## check the current folder belong to earlier VIRTUAL_ENV folder
     # if yes then do nothing
