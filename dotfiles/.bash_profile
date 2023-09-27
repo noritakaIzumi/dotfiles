@@ -55,17 +55,20 @@ randpw() {
 __after_cd() {
   # https://stackoverflow.com/questions/45216663/how-to-automatically-activate-virtualenvs-when-cding-into-a-directory
   if [[ -z "$VIRTUAL_ENV" ]]; then
+    local venv_contained_dir
     ## If env folder is found then activate the virtualenv
     if [[ -d ./.venv ]]; then
-      # shellcheck disable=SC1091
-      source ./.venv/bin/activate
+      venv_contained_dir="."
     elif [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]]; then
       local git_repo_root
       git_repo_root="$(git root)"
       if [[ -d "$git_repo_root"/.venv ]]; then
-        # shellcheck disable=SC1090
-        source "$git_repo_root"/.venv/bin/activate
+        venv_contained_dir="$git_repo_root"
       fi
+    fi
+    if [[ -n "$venv_contained_dir" ]]; then
+      # shellcheck disable=SC1090
+      source "$venv_contained_dir"/.venv/bin/activate
     fi
   else
     ## check the current folder belong to earlier VIRTUAL_ENV folder
