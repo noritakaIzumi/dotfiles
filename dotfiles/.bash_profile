@@ -5,7 +5,7 @@ fi
 
 export HISTCONTROL=ignoreboth:erasedups
 
-# SSH into windows machine
+# SSH into Windows machine
 # please add: "Include ~/.ssh/config-windows"
 cat >~/.ssh/config-windows <<EOF
 Host windows
@@ -97,18 +97,19 @@ __after_cd() {
     # shellcheck disable=SC1090
     source "$venv_contained_dir"/"$activate_bin_path"
   else
+    local parent_dir
     ## check the current folder belong to earlier VIRTUAL_ENV folder
     # if yes then do nothing
     # else deactivate
-    parentdir="$(dirname "$VIRTUAL_ENV")"
-    if [[ "$PWD"/ != "$parentdir"/* ]]; then
+    parent_dir="$(dirname "$VIRTUAL_ENV")"
+    if [[ "$PWD"/ != "$parent_dir"/* ]]; then
       deactivate
     fi
   fi
 }
 
 cd() {
-  builtin cd "$@"
+  builtin cd "$@" || return 1
   __after_cd
 }
 
