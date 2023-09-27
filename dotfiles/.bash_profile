@@ -54,9 +54,9 @@ randpw() {
 # overload builtin "cd"
 __after_cd() {
   # https://stackoverflow.com/questions/45216663/how-to-automatically-activate-virtualenvs-when-cding-into-a-directory
-  if [[ -z "$VIRTUAL_ENV" ]] ; then
+  if [[ -z "$VIRTUAL_ENV" ]]; then
     ## If env folder is found then activate the virtualenv
-    if [[ -d ./.venv ]] ; then
+    if [[ -d ./.venv ]]; then
       # shellcheck disable=SC1091
       source ./.venv/bin/activate
     elif [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]]; then
@@ -72,7 +72,7 @@ __after_cd() {
     # if yes then do nothing
     # else deactivate
     parentdir="$(dirname "$VIRTUAL_ENV")"
-    if [[ "$PWD"/ != "$parentdir"/* ]] ; then
+    if [[ "$PWD"/ != "$parentdir"/* ]]; then
       deactivate
     fi
   fi
