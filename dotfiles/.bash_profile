@@ -98,11 +98,17 @@ __after_cd() {
     source "$venv_contained_dir"/"$activate_bin_path"
   else
     local parent_dir
+    local current_dir
     ## check the current folder belong to earlier VIRTUAL_ENV folder
     # if yes then do nothing
     # else deactivate
-    parent_dir="$(dirname "$VIRTUAL_ENV")"
-    if [[ "$PWD"/ != "$parent_dir"/* ]]; then
+    if __is_mingw; then
+      parent_dir=$(dirname "$VIRTUAL_ENV" | sed -e 's/C:/\/c/' | sed -e 's/\\/\//g')
+    else
+      parent_dir="$(dirname "$VIRTUAL_ENV")"
+    fi
+    current_dir=$(pwd -P)
+    if [[ "$current_dir"/ != "$parent_dir"/* ]]; then
       deactivate
     fi
   fi
