@@ -29,11 +29,12 @@ while read -r row; do
   if [[ "$row" =~ ^\+ ]]; then
     plugin=$(echo "$row" | cut -b2-)
     echo "Install plugin: $plugin"
-    asdf plugin add "$plugin"
+    # shellcheck disable=SC2086
+    asdf plugin add $plugin
   elif [[ "$row" =~ ^\- ]]; then
     plugin=$(echo "$row" | cut -b2-)
     echo "Uninstall plugin: $plugin"
-    asdf plugin remove "$plugin"
+    asdf plugin remove "$(echo "$plugin" | cut -d' ' -f1)"
   fi
 done <<< "$(diff -U 100 <(asdf plugin list | sort -u) <(< ./dotfiles/.config/asdf/plugins sort -u) | sed -n '4,$p')"
 
