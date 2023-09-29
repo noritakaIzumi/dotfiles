@@ -20,6 +20,29 @@ fi
 # shellcheck disable=SC1090
 . "$HOME/.asdf/asdf.sh"
 
+asdf_plugin_add() {
+  local plugin_name
+  local git_repo
+
+  if [[ -z "$1" ]]; then
+    return 1
+  fi
+
+  if [[ "$1" =~ ^[^\ ]+\ [^\ ]+$ ]]; then
+    plugin_name=$(echo "$1" | cut -d' ' -f1)
+    git_repo=$(echo "$1" | cut -d' ' -f2)
+  else
+    plugin_name="$1"
+    git_repo=""
+  fi
+
+  if [[ -z "$git_repo" ]]; then
+    asdf plugin add "$plugin_name"
+  else
+    asdf plugin-add "$plugin_name" "$git_repo"
+  fi
+}
+
 # Sync asdf plugins
 while read -r row; do
   if [ -z "$row" ]; then
@@ -29,8 +52,7 @@ while read -r row; do
   if [[ "$row" =~ ^\+ ]]; then
     plugin=$(echo "$row" | cut -b2-)
     echo "Install plugin: $plugin"
-    # shellcheck disable=SC2086
-    asdf plugin add $plugin
+    asdf_plugin_add "$plugin"
   elif [[ "$row" =~ ^\- ]]; then
     plugin=$(echo "$row" | cut -b2-)
     echo "Uninstall plugin: $plugin"
