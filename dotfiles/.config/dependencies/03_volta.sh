@@ -10,12 +10,12 @@ fi
 
 pushd "$REPO_ROOT" > /dev/null || exit 1
 
-if ! command -v volta > /dev/null; then
+if [[ ! -f "$HOME/.volta/bin/volta" ]]; then
   curl https://get.volta.sh | bash -s -- --skip-setup
 else
   echo 'Volta is already installed'
 fi
-if ! command -v volta > /dev/null; then
+if [[ ! -f "$HOME/.volta/bin/volta" ]]; then
   echo 'failed to install Volta'
   exit 1
 fi
