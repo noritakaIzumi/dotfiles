@@ -12,11 +12,13 @@ pushd "$REPO_ROOT" > /dev/null || exit 1
 
 # Install asdf
 ASDF_VERSION=v0.11.3
-if ! command -v asdf >/dev/null; then
+if [[ ! -d $HOME/.asdf ]]; then
   git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF_VERSION}
 else
   echo 'asdf is already installed'
 fi
+# shellcheck disable=SC1090
+. "$HOME/.asdf/asdf.sh"
 
 # Sync asdf plugins
 while read -r row; do
