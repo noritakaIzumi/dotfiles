@@ -1,14 +1,14 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -e
 
-REPO_ROOT=$1
-if [ -z "$REPO_ROOT" ]; then
-  echo 'REPO_ROOT is not set'
+repo_root=$1
+if [ -z "$repo_root" ]; then
+  echo 'repo_root is not set'
   exit 1
 fi
 
-pushd "$REPO_ROOT" > /dev/null || exit 1
+pushd "$repo_root" > /dev/null || exit 1
 
 if ! command -v wslview > /dev/null; then
   sudo add-apt-repository ppa:wslutilities/wslu

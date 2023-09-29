@@ -1,25 +1,32 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -e
 
-REPO_ROOT=$1
-if [ -z "$REPO_ROOT" ]; then
-  echo 'REPO_ROOT is not set'
+repo_root=$1
+if [ -z "$repo_root" ]; then
+  echo 'repo_root is not set'
   exit 1
 fi
 
-pushd "$REPO_ROOT" > /dev/null || exit 1
+pushd "$repo_root" > /dev/null || exit 1
 
 # Install asdf
-ASDF_VERSION=v0.11.3
-if [[ ! -d $HOME/.asdf ]]; then
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${ASDF_VERSION}
+asdf_version=v0.11.3
+if ! command -v asdf >/dev/null; then
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${asdf_version}
 else
   echo 'asdf is already installed'
 fi
 # shellcheck disable=SC1090
 . "$HOME/.asdf/asdf.sh"
 
+#######################################
+# asdf plugin add
+# Arguments:
+#   Plugin name, or "plugin name and Git repository" as space-concatenated.
+# Returns:
+#   1 if the arguments is empty
+#######################################
 asdf_plugin_add() {
   local plugin_name
   local git_repo

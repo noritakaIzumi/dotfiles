@@ -1,13 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -e
 
-REPO_ROOT=$(cd "$(dirname "$0")" && pwd)
+repo_root=$(cd "$(dirname "$0")" && pwd)
 
-pushd "$REPO_ROOT" > /dev/null || exit 1
+pushd "$repo_root" > /dev/null || exit 1
 
 # Install dependencies
-. ./install-dependencies.sh
+. ./install_dependencies.sh
 
 # Create symlinks of config files
 pushd ./dotfiles > /dev/null || exit
@@ -34,8 +34,8 @@ git config --global tag.forcesignannotated true
 git config --global alias.root 'rev-parse --show-toplevel'
 echo 'your global git config:'
 cat "$HOME"/.gitconfig
-GIT_CONFIG_REQUIRED="user.email user.name user.signingkey"
-echo "$GIT_CONFIG_REQUIRED" | tr ' ' "\n" | while read -r config; do
+git_config_required="user.email user.name user.signingkey"
+echo "$git_config_required" | tr ' ' "\n" | while read -r config; do
   if [[ -z "$(git config --global "$config")" ]]; then
     echo "please set $config"
   fi

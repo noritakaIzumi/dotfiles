@@ -1,15 +1,15 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -e
 
-REPO_ROOT=$(cd "$(dirname "$0")" && pwd)
+repo_root=$(cd "$(dirname "$0")" && pwd)
 
-pushd "$REPO_ROOT" || exit 1
+pushd "$repo_root" || exit 1
 
 sudo apt update
 
-REQUISITES="curl git"
-echo "$REQUISITES" | tr ' ' "\n" | while read -r command; do
+requisites="curl git"
+echo "$requisites" | tr ' ' "\n" | while read -r command; do
   if ! command -v "$command" >/dev/null; then
     echo "$command is not installed"
     exit 1
@@ -17,15 +17,15 @@ echo "$REQUISITES" | tr ' ' "\n" | while read -r command; do
 done
 
 # Install apt dependencies
-DEPENDENCIES=$(tr '\n' ' ' < dotfiles/.config/dependencies/dependencies.txt | sed -e 's/ $//g')
+dependencies=$(tr '\n' ' ' < dotfiles/.config/dependencies/dependencies.txt | sed -e 's/ $//g')
 # shellcheck disable=SC2086
-sudo apt install -y $DEPENDENCIES
+sudo apt install -y $dependencies
 
 # Install dependencies (custom scripts)
 while read -r file; do
   echo "executing $file: start"
   # shellcheck disable=SC1090,SC2086
-  . $file "$REPO_ROOT"
+  . $file "$repo_root"
   echo "executing $file: end"
 done <<< "$(find ./dotfiles/.config/dependencies -mindepth 1 -type f -name '*.sh' | sort)"
 
