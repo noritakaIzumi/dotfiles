@@ -24,8 +24,7 @@ sudo apt install -y $DEPENDENCIES
 # Install dependencies (custom scripts)
 while read -r file; do
   echo "executing $file: start"
-  # shellcheck disable=SC1090
-  # shellcheck disable=SC2086
+  # shellcheck disable=SC1090,SC2086
   . $file "$REPO_ROOT"
   echo "executing $file: end"
 done <<< "$(find ./dotfiles/.config/dependencies -mindepth 1 -type f -name '*.sh' | sort)"
