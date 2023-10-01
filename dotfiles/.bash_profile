@@ -130,3 +130,6 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 # https://help.ubuntu.com/community/EnvironmentVariables#Preferred_application_variables
 # https://wslutiliti.es/wslu/
 export BROWSER=wslview
+
+# shellcheck disable=SC1090
+. "$HOME/.cargo/env"

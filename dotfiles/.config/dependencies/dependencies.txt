@@ -5,3 +5,6 @@ libreadline-dev
 tk-dev
 liblzma-dev
 gh
+libwebkit2gtk-4.0-dev
+libayatana-appindicator3-dev
+librsvg2-dev
