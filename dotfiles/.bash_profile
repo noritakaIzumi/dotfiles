@@ -48,9 +48,6 @@ else
   echo 'asdf is not installed'
 fi
 
-# GOPATH in windows
-export GOPATH=/mnt/c/Users/nizum/go/bin
-
 # enable passphrase prompt for gpg
 TTY=$(tty)
 export GPG_TTY=$TTY
