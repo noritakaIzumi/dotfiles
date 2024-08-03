@@ -70,3 +70,5 @@ for snake_case_version in "${DOCKER_PHP_DIR}"/Dockerfile.*; do
     alias "dphp$(echo "$snake_case_version" | tr -d '_')=docker_php $(echo "$snake_case_version" | tr '_' '.')"
   fi
 done
+
+alias shellspec='docker run -it --rm -u $(id -u):$(id -g) -v "$PWD:/src" shellspec/shellspec'
