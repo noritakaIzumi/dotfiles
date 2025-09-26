@@ -22,7 +22,7 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
         # Launch a new instance of the agent
         ssh-agent -s &> $HOME/.ssh/ssh-agent
    fi
-   eval `cat $HOME/.ssh/ssh-agent`
+   eval `cat $HOME/.ssh/ssh-agent` > /dev/stderr
 fi
 
 # VSCode remote development
@@ -45,7 +45,7 @@ if [[ -d $HOME/.asdf ]]; then
   # shellcheck disable=SC1090
   . "$HOME"/.asdf/completions/asdf.bash
 else
-  echo 'asdf is not installed'
+  echo 'asdf is not installed' > /dev/stderr
 fi
 
 # enable passphrase prompt for gpg
@@ -98,7 +98,7 @@ __after_cd() {
     fi
 
     if [[ ! -f "$venv_contained_dir"/"$activate_bin_path" ]]; then
-      echo 'venv dir exists but activate command does not exist'
+      echo 'venv dir exists but activate command does not exist' > /dev/stderr
       return 0
     fi
 
