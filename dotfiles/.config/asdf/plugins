@@ -4,3 +4,4 @@ git-chglog https://github.com/GoodwayGroup/asdf-git-chglog.git
 rust https://github.com/asdf-community/asdf-rust.git
 ollama https://github.com/virtualstaticvoid/asdf-ollama.git
 flutter
+java
