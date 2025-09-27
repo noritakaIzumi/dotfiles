@@ -6,10 +6,11 @@ fi
 export HISTCONTROL=ignoreboth:erasedups
 
 # SSH into Windows machine
+HOST_IP="$(ip route | grep 'default via' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')"
 # please add: "Include ~/.ssh/config-windows"
 cat >~/.ssh/config-windows <<EOF
 Host windows
-    Hostname $(ip route | grep 'default via' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
+    Hostname ${HOST_IP}
     User n.izumi
     IdentityFile ~/.ssh/id_ed25519
 EOF
@@ -142,3 +143,16 @@ export BROWSER=wslview
 
 # shellcheck disable=SC1090
 . "$HOME/.cargo/env"
+
+# Java
+if test -f "$HOME/.asdf/plugins/java/set-java-home.bash"; then
+  . "$HOME/.asdf/plugins/java/set-java-home.bash"
+fi
+
+# Android SDK
+export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+export ANDROID_HOME=${ANDROID_SDK_ROOT}
+export ADB_SERVER_SOCKET=tcp:${HOST_IP}:5037
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/emulator
