@@ -38,12 +38,13 @@ function codewslubuntu() {
   code --remote wsl+Ubuntu "${REMOTE_PATH}"
 }
 
+# user custom binaries
+export PATH="$HOME/.local/bin:$PATH"
+
 # asdf
-if [[ -d $HOME/.asdf ]]; then
-  # shellcheck disable=SC1090
-  . "$HOME"/.asdf/asdf.sh
-  # shellcheck disable=SC1090
-  . "$HOME"/.asdf/completions/asdf.bash
+if command -v asdf > /dev/null; then
+  export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+  . <(asdf completion bash)
 else
   echo 'asdf is not installed' > /dev/stderr
 fi

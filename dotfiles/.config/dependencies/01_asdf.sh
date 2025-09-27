@@ -11,14 +11,15 @@ fi
 pushd "$repo_root" > /dev/null || exit 1
 
 # Install asdf
-asdf_version=v0.11.3
+asdf_version=v0.18.0
 if ! command -v asdf >/dev/null; then
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch ${asdf_version}
+  asdf_tar_filename="asdf-${asdf_version}-linux-amd64.tar.gz"
+  asdf_download_url="https://github.com/asdf-vm/asdf/releases/download/${asdf_version}/${asdf_tar_filename}"
+  wget -q $asdf_download_url && tar -xzvf ${asdf_tar_filename} && rm -v ${asdf_tar_filename}
+  mv -v asdf "$HOME/.local/bin"
 else
   echo 'asdf is already installed'
 fi
-# shellcheck disable=SC1090
-. "$HOME/.asdf/asdf.sh"
 
 #######################################
 # asdf plugin add
@@ -46,7 +47,7 @@ asdf_plugin_add() {
   if [[ -z "$git_repo" ]]; then
     asdf plugin add "$plugin_name"
   else
-    asdf plugin-add "$plugin_name" "$git_repo"
+    asdf plugin add "$plugin_name" "$git_repo"
   fi
 }
 
