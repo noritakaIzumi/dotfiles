@@ -156,6 +156,3 @@ export ADB_SERVER_SOCKET=tcp:${HOST_IP}:5037
 export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/emulator
-
-# Flutter
-export PATH=$HOME/flutter/bin:$PATH
