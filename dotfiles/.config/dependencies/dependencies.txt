@@ -8,6 +8,3 @@ gh
 libwebkit2gtk-4.0-dev
 libayatana-appindicator3-dev
 librsvg2-dev
-cmake
-ninja-build
-mesa-utils
