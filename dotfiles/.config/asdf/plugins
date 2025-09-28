@@ -1,4 +1,4 @@
 ruby
 python
-git-chglog https://github.com/GoodwayGroup/asdf-git-chglog.git
-rust https://github.com/asdf-community/asdf-rust.git
+git-chglog
+rust
