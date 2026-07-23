@@ -1,0 +1,36 @@
+- name: Ensure .gnupg directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.gnupg"
+    state: directory
+    mode: "0700"
+
+- name: Check Windows GnuPG pinentry program
+  ansible.builtin.stat:
+    path: "{{ gpg_pinentry_program }}"
+  register: windows_gnupg_pinentry
+
+- name: Show Windows GnuPG pinentry status
+  ansible.builtin.debug:
+    msg:
+      - "Windows GnuPG pinentry path: {{ gpg_pinentry_program }}"
+      - "Windows GnuPG pinentry exists: {{ windows_gnupg_pinentry.stat.exists }}"
+
+- name: Configure gpg pinentry program for WSL
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_env.HOME }}/.gnupg/gpg-agent.conf"
+    regexp: "^pinentry-program "
+    line: "pinentry-program {{ gpg_pinentry_program }}"
+    create: true
+    mode: "0600"
+  when: windows_gnupg_pinentry.stat.exists
+
+- name: Restart gpg-agent
+  ansible.builtin.command:
+    cmd: gpgconf --kill gpg-agent
+  changed_when: true
+  when: windows_gnupg_pinentry.stat.exists
+
+- name: Show GnuPG pinentry configuration skipped
+  ansible.builtin.debug:
+    msg: "Windows GnuPG pinentry was not found. Skipped gpg-agent pinentry configuration."
+  when: not windows_gnupg_pinentry.stat.exists

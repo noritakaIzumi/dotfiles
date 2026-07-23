@@ -1,0 +1,50 @@
+- name: Configure git global settings
+  community.general.git_config:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    scope: global
+  loop: "{{ git_global_config | dict2items }}"
+
+- name: Show configured git global settings
+  ansible.builtin.debug:
+    msg:
+      - "configured git global settings:"
+      - "{{ git_global_config }}"
+
+- name: Check required git global settings
+  ansible.builtin.command:
+    cmd: "git config --global {{ item }}"
+  register: git_required_config_results
+  changed_when: false
+  failed_when: false
+  loop: "{{ git_required_config }}"
+
+- name: Set missing required git global settings
+  ansible.builtin.set_fact:
+    missing_git_required_config: "{{ missing_git_required_config | default([]) + [item.item] }}"
+  when: item.rc != 0 or item.stdout == ""
+  loop: "{{ git_required_config_results.results }}"
+
+- name: Show missing required git global settings
+  ansible.builtin.debug:
+    msg:
+      - "Required git global config is missing."
+      - "Please set the following config values:"
+      - "{{ missing_git_required_config | default([]) }}"
+      - "Example:"
+      - 'git config --global user.email "you@example.com"'
+      - 'git config --global user.name "Your Name"'
+      - 'git config --global user.signingkey "YOUR_GPG_KEY_ID"'
+  when: missing_git_required_config | default([]) | length > 0
+
+- name: Fail if required git global settings are missing
+  ansible.builtin.fail:
+    msg: "Required git global config is missing. See the previous task output."
+  when: missing_git_required_config | default([]) | length > 0
+
+- name: Get current git global config
+  ansible.builtin.command:
+    cmd: git config --global --list
+  register: git_global_config_list
+  changed_when: false
+  failed_when: false

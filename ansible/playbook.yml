@@ -1,0 +1,9 @@
+- name: Install dependencies
+  hosts: localhost
+  gather_facts: true
+
+  roles:
+    - dependencies
+    - git
+    - gpg
+    - dotfiles

@@ -1,0 +1,31 @@
+apt_packages:
+  - vim
+  - gh
+
+asdf_version: v0.18.0
+asdf_arch: linux-amd64
+expected_asdf_plugins:
+  - ruby
+  - python
+  - git-chglog
+  - rust
+
+volta_install_url: https://get.volta.sh
+
+wslu_ppa: ppa:wslutilities/wslu
+
+git_global_config:
+  core.autocrlf: input
+  core.editor: vim
+  commit.gpgsign: "true"
+  gpg.program: gpg
+  init.defaultbranch: main
+  tag.gpgsign: "true"
+  alias.root: rev-parse --show-toplevel
+
+git_required_config:
+  - user.email
+  - user.name
+  - user.signingkey
+
+gpg_pinentry_program: "/mnt/c/Program Files/GnuPG/bin/pinentry-basic.exe"

@@ -1,0 +1,86 @@
+- name: Create temporary chezmoi source directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: chezmoi-source
+  register: temporary_chezmoi_source
+
+- name: Apply dotfiles with temporary chezmoi source
+  block:
+    - name: Show temporary chezmoi source directory
+      ansible.builtin.debug:
+        msg: "temporary chezmoi source: {{ temporary_chezmoi_source.path }}"
+
+    - name: Build temporary chezmoi source
+      ansible.builtin.shell:
+        cmd: |
+          set -euo pipefail
+
+          source_dir="{{ playbook_dir }}/../dotfiles"
+          target_dir="{{ temporary_chezmoi_source.path }}"
+
+          find "$source_dir" -type f -print0 | while IFS= read -r -d '' source_file; do
+            relative_path="${source_file#"$source_dir"/}"
+            encoded_path=""
+
+            IFS='/' read -ra path_parts <<< "$relative_path"
+            for path_part in "${path_parts[@]}"; do
+              if [[ "$path_part" == .* ]]; then
+                path_part="dot_${path_part#.}"
+              fi
+
+              if [[ -z "$encoded_path" ]]; then
+                encoded_path="$path_part"
+              else
+                encoded_path="$encoded_path/$path_part"
+              fi
+            done
+
+            mkdir -p "$target_dir/$(dirname "$encoded_path")"
+            cp -p "$source_file" "$target_dir/$encoded_path"
+          done
+        executable: /bin/bash
+
+    - name: Show generated chezmoi source files
+      ansible.builtin.command:
+        cmd: find "{{ temporary_chezmoi_source.path }}" -type f -print
+      register: generated_chezmoi_source_files
+      changed_when: false
+
+    - name: Display generated chezmoi source files
+      ansible.builtin.debug:
+        msg: "{{ generated_chezmoi_source_files.stdout_lines }}"
+
+    - name: Show chezmoi diff
+      ansible.builtin.command:
+        cmd: chezmoi diff --source "{{ temporary_chezmoi_source.path }}"
+      register: chezmoi_diff
+      changed_when: false
+      failed_when: false
+
+    - name: Display chezmoi diff
+      ansible.builtin.debug:
+        msg: "{{ chezmoi_diff.stdout_lines }}"
+      when: chezmoi_diff.stdout != ""
+
+    - name: Show no chezmoi diff
+      ansible.builtin.debug:
+        msg: "No chezmoi diff."
+      when: chezmoi_diff.stdout == ""
+
+    - name: Apply chezmoi source
+      ansible.builtin.command:
+        cmd: chezmoi apply --source "{{ temporary_chezmoi_source.path }}" --verbose
+      register: chezmoi_apply
+      changed_when: chezmoi_apply.stdout != ""
+      failed_when: chezmoi_apply.rc != 0
+
+    - name: Display chezmoi apply output
+      ansible.builtin.debug:
+        msg: "{{ chezmoi_apply.stdout_lines }}"
+      when: chezmoi_apply.stdout != ""
+
+  always:
+    - name: Remove temporary chezmoi source directory
+      ansible.builtin.file:
+        path: "{{ temporary_chezmoi_source.path }}"
+        state: absent
