@@ -4,41 +4,30 @@
     suffix: chezmoi-source
   register: temporary_chezmoi_source
 
+- name: Create temporary script directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: dotfiles-scripts
+  register: temporary_dotfiles_scripts
+
 - name: Apply dotfiles with temporary chezmoi source
   block:
     - name: Show temporary chezmoi source directory
       ansible.builtin.debug:
         msg: "temporary chezmoi source: {{ temporary_chezmoi_source.path }}"
 
+    - name: Copy build chezmoi source script
+      ansible.builtin.copy:
+        src: build-chezmoi-source.sh
+        dest: "{{ temporary_dotfiles_scripts.path }}/build-chezmoi-source.sh"
+        mode: "0755"
+
     - name: Build temporary chezmoi source
-      ansible.builtin.shell:
-        cmd: |
-          set -euo pipefail
-
-          source_dir="{{ playbook_dir }}/../dotfiles"
-          target_dir="{{ temporary_chezmoi_source.path }}"
-
-          find "$source_dir" -type f -print0 | while IFS= read -r -d '' source_file; do
-            relative_path="${source_file#"$source_dir"/}"
-            encoded_path=""
-
-            IFS='/' read -ra path_parts <<< "$relative_path"
-            for path_part in "${path_parts[@]}"; do
-              if [[ "$path_part" == .* ]]; then
-                path_part="dot_${path_part#.}"
-              fi
-
-              if [[ -z "$encoded_path" ]]; then
-                encoded_path="$path_part"
-              else
-                encoded_path="$encoded_path/$path_part"
-              fi
-            done
-
-            mkdir -p "$target_dir/$(dirname "$encoded_path")"
-            cp -p "$source_file" "$target_dir/$encoded_path"
-          done
-        executable: /bin/bash
+      ansible.builtin.command:
+        cmd: >-
+          {{ temporary_dotfiles_scripts.path }}/build-chezmoi-source.sh
+          {{ playbook_dir }}/../dotfiles
+          {{ temporary_chezmoi_source.path }}
 
     - name: Show generated chezmoi source files
       ansible.builtin.command:
@@ -83,4 +72,9 @@
     - name: Remove temporary chezmoi source directory
       ansible.builtin.file:
         path: "{{ temporary_chezmoi_source.path }}"
+        state: absent
+
+    - name: Remove temporary script directory
+      ansible.builtin.file:
+        path: "{{ temporary_dotfiles_scripts.path }}"
         state: absent
