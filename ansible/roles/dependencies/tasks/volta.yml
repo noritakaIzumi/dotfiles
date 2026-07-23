@@ -1,0 +1,27 @@
+- name: Check Volta command
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.volta/bin/volta"
+  register: volta_command
+
+- name: Show Volta command status
+  ansible.builtin.debug:
+    msg:
+      - "volta path: {{ ansible_env.HOME }}/.volta/bin/volta"
+      - "volta is installed: {{ volta_command.stat.exists }}"
+
+- name: Install Volta
+  ansible.builtin.shell:
+    cmd: "curl {{ volta_install_url }} | bash -s -- --skip-setup"
+  args:
+    executable: /bin/bash
+  when: not volta_command.stat.exists
+
+- name: Check Volta command after installation
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.volta/bin/volta"
+  register: volta_command_after_install
+
+- name: Show Volta command status after installation
+  ansible.builtin.debug:
+    msg:
+      - "volta is installed after installation step: {{ volta_command_after_install.stat.exists }}"

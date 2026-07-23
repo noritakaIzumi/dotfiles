@@ -1,0 +1,98 @@
+- name: Ensure ~/.local/bin exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.local/bin"
+    state: directory
+    mode: "0755"
+
+- name: Check asdf command
+  ansible.builtin.command:
+    cmd: "{{ ansible_env.HOME }}/.local/bin/asdf version"
+  register: asdf_command
+  changed_when: false
+  failed_when: false
+
+- name: Show asdf command status
+  ansible.builtin.debug:
+    msg:
+      - "asdf command path: {{ ansible_env.HOME }}/.local/bin/asdf"
+      - "asdf is installed: {{ asdf_command.rc == 0 }}"
+      - "asdf version: {{ asdf_command.stdout | default('') }}"
+      - "asdf check stderr: {{ asdf_command.stderr | default('') }}"
+
+- name: Download asdf archive
+  ansible.builtin.get_url:
+    url: "https://github.com/asdf-vm/asdf/releases/download/{{ asdf_version }}/asdf-{{ asdf_version }}-{{ asdf_arch }}.tar.gz"
+    dest: "/tmp/asdf-{{ asdf_version }}-{{ asdf_arch }}.tar.gz"
+    mode: "0644"
+  when: asdf_command.rc != 0
+
+- name: Extract asdf archive
+  ansible.builtin.unarchive:
+    src: "/tmp/asdf-{{ asdf_version }}-{{ asdf_arch }}.tar.gz"
+    dest: /tmp
+    remote_src: true
+  when: asdf_command.rc != 0
+
+- name: Install asdf binary
+  ansible.builtin.copy:
+    src: /tmp/asdf
+    dest: "{{ ansible_env.HOME }}/.local/bin/asdf"
+    mode: "0755"
+    remote_src: true
+  when: asdf_command.rc != 0
+
+- name: Remove asdf temporary files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /tmp/asdf
+    - "/tmp/asdf-{{ asdf_version }}-{{ asdf_arch }}.tar.gz"
+
+- name: Check asdf command after installation
+  ansible.builtin.command:
+    cmd: "{{ ansible_env.HOME }}/.local/bin/asdf version"
+  register: asdf_command_after_install
+  changed_when: false
+  failed_when: false
+
+- name: Show asdf command status after installation
+  ansible.builtin.debug:
+    msg:
+      - "asdf is installed after installation step: {{ asdf_command_after_install.rc == 0 }}"
+      - "asdf version after installation step: {{ asdf_command_after_install.stdout | default('') }}"
+      - "asdf check stderr after installation step: {{ asdf_command_after_install.stderr | default('') }}"
+
+- name: Show expected asdf plugins
+  ansible.builtin.debug:
+    msg:
+      - "expected asdf plugins:"
+      - "{{ expected_asdf_plugins }}"
+
+- name: Get installed asdf plugins
+  ansible.builtin.command:
+    cmd: "{{ ansible_env.HOME }}/.local/bin/asdf plugin list"
+  register: installed_asdf_plugins
+  changed_when: false
+  failed_when: false
+
+- name: Show installed asdf plugins
+  ansible.builtin.debug:
+    msg:
+      - "installed asdf plugins command succeeded: {{ installed_asdf_plugins.rc == 0 }}"
+      - "installed asdf plugins:"
+      - "{{ installed_asdf_plugins.stdout_lines | default([]) }}"
+      - "installed asdf plugins stderr: {{ installed_asdf_plugins.stderr | default('') }}"
+
+- name: Show asdf plugin diff
+  ansible.builtin.debug:
+    msg:
+      - "missing asdf plugins:"
+      - "{{ expected_asdf_plugins | difference(installed_asdf_plugins.stdout_lines | default([])) }}"
+      - "unmanaged asdf plugins:"
+      - "{{ installed_asdf_plugins.stdout_lines | default([]) | difference(expected_asdf_plugins) }}"
+
+- name: Install missing asdf plugins
+  ansible.builtin.command:
+    cmd: "{{ ansible_env.HOME }}/.local/bin/asdf plugin add {{ item }}"
+  loop: "{{ expected_asdf_plugins | difference(installed_asdf_plugins.stdout_lines | default([])) }}"

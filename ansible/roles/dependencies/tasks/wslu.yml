@@ -1,0 +1,26 @@
+- name: Add wslu PPA
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "{{ wslu_ppa }}"
+    state: present
+    update_cache: true
+
+- name: Install wslu
+  become: true
+  ansible.builtin.apt:
+    name: wslu
+    state: present
+
+- name: Check wslu command
+  ansible.builtin.command:
+    cmd: wslview --version
+  register: wslu_command
+  changed_when: false
+  failed_when: false
+
+- name: Show wslu command status
+  ansible.builtin.debug:
+    msg:
+      - "wslu is installed: {{ wslu_command.rc == 0 }}"
+      - "wslu version: {{ wslu_command.stdout | default('') }}"
+      - "wslu stderr: {{ wslu_command.stderr | default('') }}"
