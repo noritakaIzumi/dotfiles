@@ -5,39 +5,6 @@ fi
 
 export HISTCONTROL=ignoreboth:erasedups
 
-# SSH into Windows machine
-# please add: "Include ~/.ssh/config-windows"
-cat >~/.ssh/config-windows <<EOF
-Host windows
-    Hostname $(ip route | grep 'default via' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
-    User n.izumi
-    IdentityFile ~/.ssh/id_ed25519
-EOF
-
-# Run ssh-agent
-if [ -z "$SSH_AUTH_SOCK" ]; then
-   # Check for a currently running instance of the agent
-   RUNNING_AGENT="`ps -ax | grep 'ssh-agent -s' | grep -v grep | wc -l | tr -d '[:space:]'`"
-   if [ "$RUNNING_AGENT" = "0" ]; then
-        # Launch a new instance of the agent
-        ssh-agent -s &> $HOME/.ssh/ssh-agent
-   fi
-   eval `cat $HOME/.ssh/ssh-agent` > /dev/stderr
-fi
-
-# VSCode remote development
-function coderemote() {
-  local SSH_CONFIG_NAME=$1
-  local REMOTE_PATH=$2
-  code --remote ssh-remote+"${SSH_CONFIG_NAME}" "${REMOTE_PATH}"
-}
-
-# VSCode WSL development
-function codewslubuntu() {
-  local REMOTE_PATH=$1
-  code --remote wsl+Ubuntu "${REMOTE_PATH}"
-}
-
 # user custom binaries
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -139,6 +106,3 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 # https://help.ubuntu.com/community/EnvironmentVariables#Preferred_application_variables
 # https://wslutiliti.es/wslu/
 export BROWSER=wslview
-
-# shellcheck disable=SC1090
-. "$HOME/.cargo/env"
