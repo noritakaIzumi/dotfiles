@@ -12,6 +12,8 @@ expected_asdf_plugins:
 
 uv_install_url: https://astral.sh/uv/install.sh
 
+act_install_url: https://raw.githubusercontent.com/nektos/act/master/install.sh
+
 volta_install_url: https://get.volta.sh
 
 wslu_ppa: ppa:wslutilities/wslu

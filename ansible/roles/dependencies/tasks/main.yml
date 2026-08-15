@@ -23,6 +23,9 @@
 - name: Import uv tasks
   ansible.builtin.import_tasks: uv.yml
 
+- name: Import act tasks
+  ansible.builtin.import_tasks: act.yml
+
 - name: Import Volta tasks
   ansible.builtin.import_tasks: volta.yml
 
