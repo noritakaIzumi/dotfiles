@@ -1,0 +1,38 @@
+- name: Check uv command
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/uv"
+  register: uv_command
+
+- name: Install uv
+  when: not uv_command.stat.exists
+  block:
+    - name: Download uv installer
+      ansible.builtin.get_url:
+        url: "{{ uv_install_url }}"
+        dest: /tmp/uv-installer.sh
+        mode: "0755"
+
+    - name: Run uv installer
+      ansible.builtin.command:
+        cmd: /bin/sh /tmp/uv-installer.sh
+      environment:
+        UV_INSTALL_DIR: "{{ ansible_env.HOME }}/.local/bin"
+        UV_NO_MODIFY_PATH: "1"
+
+  always:
+    - name: Remove uv installer
+      ansible.builtin.file:
+        path: /tmp/uv-installer.sh
+        state: absent
+
+- name: Check uv command after installation
+  ansible.builtin.command:
+    cmd: "{{ ansible_env.HOME }}/.local/bin/uv --version"
+  register: uv_command_after_install
+  changed_when: false
+
+- name: Show uv command status after installation
+  ansible.builtin.debug:
+    msg:
+      - "uv is installed: {{ uv_command_after_install.rc == 0 }}"
+      - "uv version: {{ uv_command_after_install.stdout }}"

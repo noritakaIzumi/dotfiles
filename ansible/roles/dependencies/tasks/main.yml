@@ -20,6 +20,9 @@
 - name: Import asdf tasks
   ansible.builtin.import_tasks: asdf.yml
 
+- name: Import uv tasks
+  ansible.builtin.import_tasks: uv.yml
+
 - name: Import Volta tasks
   ansible.builtin.import_tasks: volta.yml
 

@@ -10,6 +10,8 @@ expected_asdf_plugins:
   - git-chglog
   - rust
 
+uv_install_url: https://astral.sh/uv/install.sh
+
 volta_install_url: https://get.volta.sh
 
 wslu_ppa: ppa:wslutilities/wslu
