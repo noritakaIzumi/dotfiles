@@ -1,6 +1,7 @@
 apt_packages:
   - vim
   - gh
+  - golang
 
 asdf_version: v0.18.0
 asdf_arch: linux-amd64
