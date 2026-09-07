@@ -14,8 +14,45 @@
 - name: Install apt dependencies
   become: true
   ansible.builtin.apt:
-    name: "{{ apt_packages }}"
+    name: "{{ apt_packages | reject('match', '^https?://') | list }}"
     state: present
+  when: apt_packages | reject('match', '^https?://') | list | length > 0
+
+- name: Ensure downloaded apt package cache exists
+  become: true
+  ansible.builtin.file:
+    path: /var/cache/ansible/apt-packages
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: apt_packages | select('match', '^https?://') | list | length > 0
+
+- name: Download and install apt packages from URLs
+  block:
+    - name: Download apt packages from URLs
+      become: true
+      ansible.builtin.get_url:
+        url: "{{ item }}"
+        dest: "/var/cache/ansible/apt-packages/{{ item | basename }}"
+        mode: '0644'
+      loop: "{{ apt_packages | select('match', '^https?://') | list }}"
+      register: downloaded_apt_packages
+
+    - name: Install downloaded apt packages
+      become: true
+      ansible.builtin.apt:
+        deb: "{{ item.dest }}"
+        state: present
+      loop: "{{ downloaded_apt_packages.results | default([]) }}"
+  always:
+    - name: Remove downloaded apt packages
+      become: true
+      ansible.builtin.file:
+        path: "{{ item.dest }}"
+        state: absent
+      loop: "{{ downloaded_apt_packages.results | default([]) }}"
+      when: item.dest is defined
 
 - name: Import asdf tasks
   ansible.builtin.import_tasks: asdf.yml

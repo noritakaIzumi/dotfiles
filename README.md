@@ -39,3 +39,17 @@ dotfiles/.config/git/ignore
 ```
 
 Ansible の `become` を使うため、実行中に sudo パスワードを求められます。
+
+### URL からの Debian パッケージのインストール
+
+`ansible/group_vars/all.yml` の `apt_packages` には、通常の APT パッケージ名と
+URL から取得する `.deb` パッケージを混在させられます。
+
+```yaml
+apt_packages:
+  - vim
+  - https://example.com/example_1.0.0_amd64.deb
+```
+
+URL のパッケージは `/var/cache/ansible/apt-packages` にダウンロードしてから
+APT でインストールされます。URL の末尾は `.deb` ファイル名にしてください。
