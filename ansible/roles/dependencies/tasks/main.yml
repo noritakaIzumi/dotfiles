@@ -44,6 +44,7 @@
       ansible.builtin.apt:
         deb: "{{ item.dest }}"
         state: present
+        allow_downgrade: true
       loop: "{{ downloaded_apt_packages.results | default([]) }}"
   always:
     - name: Remove downloaded apt packages
